@@ -1,0 +1,4 @@
+tqdm
+allennlp==0.9.0
+torch==1.4.0
+transformers==3.0.2
