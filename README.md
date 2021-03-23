@@ -14,7 +14,7 @@ This repository contains  (PyTorch) code and pre-trained models for PURE (the **
 * [Relation Model](#Relation-Model)
   * [Input data format](#Input-data-format-for-the-relation-model)
   * [Train/evaluate the relation model](#Train/evaluate-the-relation-model)
-  * [Approximation Relation Model](#Approximation-relation-model)
+  * [Approximation relation model](#Approximation-relation-model)
 * [Pre-trained Models](#Pre-trained-Models)
   * [Pre-trained models for ACE05](#Pre-trained-models-for-ACE05)
   * [Pre-trained models for SciERC](#Pre-trained-models-for-SciERC)
