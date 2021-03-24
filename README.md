@@ -152,7 +152,7 @@ The input data format of the entity model is JSONL. Each line of the input file 
 
 You can use `run_entity.py` with `--do_train` to train an entity model and with `--do_eval` to evaluate an entity model.
 A trianing command template is as follow:
-```
+```bash
 python run_entity.py \
     --do_train --do_eval [--eval_test] \
     --learning_rate=1e-5 --task_learning_rate=5e-4 \
@@ -175,7 +175,7 @@ The predictions of the entity model will be saved as a file (`ent_pred_dev.json`
 ## Relation Model
 ### Input data format for the relation model
 The input data format of the relation model is almost the same as that of the entity model, except that there is one more filed `."predicted_ner"` to store the predictions of the entity model.
-```
+```bash
 {
   "doc_key": "CNN_ENG_20030306_083604.6",
   "sentences": [...],
@@ -192,7 +192,7 @@ The input data format of the relation model is almost the same as that of the en
 
 ### Train/evaluate the relation model:
 You can use `run_relation.py` with `--do_train` to train a relation model and with `--do_eval` to evaluate a relation model. A trianing command template is as follow:
-```
+```bash
 python run_relation.py \
   --task {ace05 | ace04 | scierc} \
   --do_train --train_file {path to the training json file of the dataset} \
@@ -215,13 +215,13 @@ Aruguments:
 The prediction results will be stored in the file `predictions.json` in the folder `output_dir`, and the format will be almost the same with the output file from the entity model, except that there is one more field `"predicted_relations"` for each document.
 
 You can run the evaluation script to output the end-to-end performance  (`Ent`, `Rel`, and `Rel+`) of the predictions.
-```
+```bash
 python run_eval.py --prediction_file {path to output_dir}/predictions.json
 ```
 
 ### Approximation relation model
 You can use the following command to train an approximation model.
-```
+```bash
 python run_relation_approx.py \
  --task {ace05 | ace04 | scierc} \
  --do_train --train_file {path to the training json file of the dataset} \
@@ -239,7 +239,7 @@ python run_relation_approx.py \
 ```
 
 Once you have a trained approximation model, you can enable efficient batch computation during inference with `--batch_computation`:
-```
+```bash
 python run_relation_approx.py \
  --task {ace05 | ace04 | scierc} \
  --do_eval [--eval_test] [--eval_with_gold] \
