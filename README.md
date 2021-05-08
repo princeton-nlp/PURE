@@ -355,7 +355,7 @@ If you have any questions related to the code or the paper, feel free to email Z
 
 ## Citation
 If you use our code in your research, please cite our work:
-```
+```bibtex
 @inproceedings{zhong2021frustratingly,
    title={A Frustratingly Easy Approach for Entity and Relation Extraction},
    author={Zhong, Zexuan and Chen, Danqi},
