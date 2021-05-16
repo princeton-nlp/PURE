@@ -1,4 +1,4 @@
-# PURE: End-to-End Relation Extraction
+# PURE: Entity and Relation Extraction from Text
 
 This repository contains  (PyTorch) code and pre-trained models for PURE (the **P**rinceton **U**niversity **R**elation **E**xtraction system), described by the paper: [A Frustratingly Easy Approach for Entity and Relation Extraction](https://arxiv.org/pdf/2010.12812.pdf).
 
