@@ -145,6 +145,8 @@ if __name__ == '__main__':
 
     parser.add_argument('--do_train', action='store_true', 
                         help="whether to run training")
+    parser.add_argument('--train_shuffle', action='store_true',
+                        help="whether to train with randomly shuffled data")
     parser.add_argument('--do_eval', action='store_true', 
                         help="whether to run evaluation")
     parser.add_argument('--eval_test', action='store_true', 
@@ -216,6 +218,8 @@ if __name__ == '__main__':
         global_step = 0
         eval_step = len(train_batches) // args.eval_per_epoch
         for _ in tqdm(range(args.num_epoch)):
+            if args.train_shuffle:
+                random.shuffle(train_batches)
             for i in tqdm(range(len(train_batches))):
                 output_dict = model.run_batch(train_batches[i], training=True)
                 loss = output_dict['ner_loss']
