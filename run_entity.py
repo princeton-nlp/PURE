@@ -9,7 +9,7 @@ from tqdm import tqdm
 import numpy as np
 
 from shared.data_structures import Dataset
-from shared.const import task_ner_labels, get_labelmap
+from shared.const import TaskLabels
 from entity.utils import convert_dataset_to_samples, batchify, NpEncoder
 from entity.models import EntityModel
 
@@ -116,7 +116,7 @@ def setseed(seed):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--task', type=str, default=None, required=True, choices=['ace04', 'ace05', 'scierc'])
+    parser.add_argument('--task', type=str, default=None, required=True)
 
     parser.add_argument('--data_dir', type=str, default=None, required=True, 
                         help="path to the preprocessed dataset")
@@ -187,10 +187,11 @@ if __name__ == '__main__':
 
     logger.info(sys.argv)
     logger.info(args)
+
+    task_labels = TaskLabels(args, logger)
+    ner_label2id, ner_id2label = task_labels.get_labelmap()
     
-    ner_label2id, ner_id2label = get_labelmap(task_ner_labels[args.task])
-    
-    num_ner_labels = len(task_ner_labels[args.task]) + 1
+    num_ner_labels = len(task_labels.task_ner_labels[args.task]) + 1
     model = EntityModel(args, num_ner_labels=num_ner_labels)
 
     dev_data = Dataset(args.dev_data)

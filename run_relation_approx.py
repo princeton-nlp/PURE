@@ -24,7 +24,7 @@ from transformers import AutoTokenizer
 from transformers import AdamW, get_linear_schedule_with_warmup
 
 from relation.utils import generate_relation_data, decode_sample_id
-from shared.const import task_rel_labels, task_ner_labels
+from shared.const import TaskLabels
 from shared.data_structures import Dataset
 
 CLS = "[CLS]"
@@ -403,12 +403,14 @@ def main(args):
     logger.info("device: {}, n_gpu: {}".format(
         device, n_gpu))
 
+    task_labels = TaskLabels(args, logger)
+
     # get label_list
     if os.path.exists(os.path.join(args.output_dir, 'label_list.json')):
         with open(os.path.join(args.output_dir, 'label_list.json'), 'r') as f:
             label_list = json.load(f)
     else:
-        label_list = [args.negative_label] + task_rel_labels[args.task]
+        label_list = [args.negative_label] + task_labels.task_rel_labels[args.task]
         with open(os.path.join(args.output_dir, 'label_list.json'), 'w') as f:
             json.dump(label_list, f)
     label2id = {label: i for i, label in enumerate(label_list)}
@@ -417,7 +419,7 @@ def main(args):
 
     tokenizer = AutoTokenizer.from_pretrained(args.model, do_lower_case=args.do_lower_case)
     if args.add_new_tokens:
-        add_marker_tokens(tokenizer, task_ner_labels[args.task])
+        add_marker_tokens(tokenizer, task_labels.task_ner_labels[args.task])
 
     if os.path.exists(os.path.join(args.output_dir, 'special_tokens.json')):
         with open(os.path.join(args.output_dir, 'special_tokens.json'), 'r') as f:
@@ -611,7 +613,7 @@ if __name__ == "__main__":
 
     parser.add_argument("--prediction_file", type=str, default="predictions.json", help="The prediction filename for the relation model")
 
-    parser.add_argument('--task', type=str, default=None, required=True, choices=['ace04', 'ace05', 'scierc'])
+    parser.add_argument('--task', type=str, default=None, required=True)
     parser.add_argument('--context_window', type=int, default=0)
 
     parser.add_argument('--add_new_tokens', action='store_true', 
