@@ -1,4 +1,5 @@
 import json
+import os
 
 class TaskLabels:
     def __init__(self, args, logger):
@@ -15,12 +16,34 @@ class TaskLabels:
         self.task = args.task
 
         if self.task not in ['ace04', 'ace05', 'scierc']:
-            self.task_ner_labels[self.task] = set()
-            self.task_rel_labels[self.task] = set()
-            self._autopopulate_tasks(args)
-            self.task_ner_labels[self.task] = list(self.task_ner_labels[self.task])
-            self.task_rel_labels[self.task] = list(self.task_rel_labels[self.task])
-            logger.info(f'Auto-populating labels for task: {self.task}')
+            if 'entity_output_dir' in vars(args).keys():
+                if not os.path.exists(os.path.join(args.entity_output_dir, 'tasklabels.json')):
+                    logger.info('Task Labels not found in entity output directory. Please run run_entity.py before running this !')
+                    exit(-1)
+                logger.info(f'Reading task labels from: ' + os.path.join(args.entity_output_dir, 'tasklabels.json'))
+                with open(os.path.join(args.entity_output_dir, 'tasklabels.json')) as f:
+                    tasklabeljson = json.load(f)
+                self.task_ner_labels = tasklabeljson['task_ner_labels']
+                self.task_rel_labels = tasklabeljson['task_rel_labels']
+            else:
+                if os.path.exists(os.path.join(args.output_dir, 'tasklabels.json')):
+                    with open(os.path.join(args.output_dir, 'tasklabels.json')) as f:
+                        tasklabeljson = json.load(f)
+                    self.task_ner_labels = tasklabeljson['task_ner_labels']
+                    self.task_rel_labels = tasklabeljson['task_rel_labels']
+                
+                logger.info(f'Auto-populating labels for task: {self.task}')
+                self.task_ner_labels[self.task] = set()
+                self.task_rel_labels[self.task] = set()
+                self._autopopulate_tasks(args)
+                self.task_ner_labels[self.task] = list(self.task_ner_labels[self.task])
+                self.task_rel_labels[self.task] = list(self.task_rel_labels[self.task])
+                with open(os.path.join(args.output_dir, 'tasklabels.json'), 'w') as f:
+                    tasklabeljson = dict()
+                    tasklabeljson['task_ner_labels'] = self.task_ner_labels
+                    tasklabeljson['task_rel_labels'] = self.task_rel_labels
+                    json.dump(tasklabeljson, f)
+                logger.info(f'Saved task labels at: ' + os.path.join(args.output_dir, 'tasklabels.json'))
         else:
             logger.info(f'Using pre-loaded labels for task: {self.task}')
         logger.info('NER Labels: ' + str(self.task_ner_labels[self.task]))
